@@ -8,7 +8,7 @@ $(document).ready(function (){
             let name = $('input[name = "name"]').val();
             let email = $('input[name = "email"]').val();
             let password = $('input[name = "password"]').val();
-            let confirmpassword = $('input[name = "confirmpassword"]').val();
+            let confirmPassword = $('input[name = "confirmpassword"]').val();
             let checkbox1 = $('input[name = "checkbox1"]').is(':checked');
             let checkbox2 = $('input[name = "checkbox2"]').is(':checked');
             let errorMessage = "";
@@ -45,7 +45,7 @@ $(document).ready(function (){
 
          //Validate login form
          $('#login-form').submit(function (e) {
-        
+            toastr.clear();
             let email = $('input[name = "email"]').val();
             let password = $('input[name = "password"]').val();
             let errorMessage = "";
@@ -59,6 +59,34 @@ $(document).ready(function (){
                 errorMessage += "Mật khẩu có ít nhất 6 ký tự. <br>";
             }
             
+            if(errorMessage != ""){
+                toastr.error(errorMessage, "Lỗi");
+                e.preventDefault();
+            }
+
+
+        });
+
+         //Validate resetpassword form
+         $('#reset-password-form').submit(function (e) {
+        
+            let email = $('input[name = "email"]').val();
+            let password = $('input[name = "password"]').val();
+            let confirmPassword = $('input[name = "password_confirmation"]').val();
+
+            let errorMessage = "";
+
+            let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)){
+                errorMessage += "Email không hợp lệ. <br>";
+            }
+
+            if(password.length < 6){
+                errorMessage += "Mật khẩu có ít nhất 6 ký tự. <br>";
+            }
+            if(password != confirmpassword){
+                errorMessage += "Mật khẩu nhập lại không khớp. <br>";
+            }
             if(errorMessage != ""){
                 toastr.error(errorMessage, "Lỗi");
                 e.preventDefault();

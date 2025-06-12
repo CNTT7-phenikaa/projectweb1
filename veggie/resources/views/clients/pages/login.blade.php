@@ -38,7 +38,7 @@
                             <button class="theme-btn-1 btn btn-block" type="submit">ĐĂNG NHẬP</button>
                         </div>
                         <div class="go-to-btn mt-20">
-                            <a href="#"><small>Bạn quên mật khẩu?</small></a>
+                            <a href="{{ route('password.request') }}"><small>Bạn quên mật khẩu?</small></a>
                         </div>
                     </form>
                 </div>

@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model implements AuthenticatableContract
+
+class User extends Authenticatable implements CanResetPasswordContract
 {
-    use Authenticatable;
-    use HasFactory;
+    use HasFactory, CanResetPassword, Notifiable;
 
-    protected $fillable = [//gán hàng loạt
+    protected $fillable = [
         'name',
         'email',
         'password',
@@ -26,29 +27,29 @@ class User extends Model implements AuthenticatableContract
 
     protected $hidden = [
         'password',
-        'remeber_token',
+        'remember_token', // bạn viết sai thành `remeber_token`
     ];
 
     protected function casts(){
         return [
-            'email_verified_at'     => 'datetime',
-            'password'      => 'hashed',
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
         ];
     }
 
     public function role(){
         return $this->belongsTo(Role::class);
     }
+
     public function review(){
         return $this->hasMany(Review::class);
     }
+
     public function shippingAddress(){
-        return $this->hasMany(shippingAddress::class);
+        return $this->hasMany(ShippingAddress::class); // viết hoa đúng class
     }
 
-
-    //check status
-
+    // Các phương thức kiểm tra trạng thái
     public function isPending(){
         return $this->status == 'pending';
     }
@@ -56,13 +57,12 @@ class User extends Model implements AuthenticatableContract
     public function isActive(){
         return $this->status == 'active';
     }
+
     public function isBanned(){
         return $this->status == 'banned';
     }
+
     public function isDeleted(){
         return $this->status == 'deleted';
     }
-
-
-
 }
