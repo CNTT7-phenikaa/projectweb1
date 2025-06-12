@@ -26,25 +26,36 @@ Route::get('/team', function () {
 Route::get('/faq', function () {
     return view('clients.pages.faq');
 });
-// Đăng ký tài khoản
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('post-register');
+
+Route::middleware('guest')->group(function () {
+    // Đăng ký tài khoản
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('post-register');
+
+    //Đăng nhập tài khoản
+    Route::get('/login', [AuthController::class, 'showloginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('post-login');
+
+    //Chức năng quên mật khẩu người dùng
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+    //Đặt lại mật khẩu
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.update');
+
+
+});
+
 //Kích hoạt tài khoản qua email
 Route::get('/activate/{token}', [AuthController::class, 'activate'])->name('activate');
 
-//Đăng nhập tài khoản
-Route::get('/login', [AuthController::class, 'showloginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('post-login');
 
-//Đăng xuất tài khoản
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-//Chức năng quên mật khẩu người dùng
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 
-Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->name('password.update');
-
+//
+Route::middleware(['auth.custom'])->group(function() {
+    //Đăng xuất tài khoản
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
 
 //Giao diện phía Admin
