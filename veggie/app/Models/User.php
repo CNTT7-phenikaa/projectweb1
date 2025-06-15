@@ -65,4 +65,8 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function isDeleted(){
         return $this->status == 'deleted';
     }
+
+    public function getAvatarUrlAttribute(){
+        return $this->avatar ? asset('storage/'. $this->avatar) : asset('storage/uploads/users/avatar-default-icon-1975x2048-2mpk4u9k.png');
+    }
 }

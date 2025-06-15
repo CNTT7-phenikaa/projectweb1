@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Clients\AccountController;
 use App\Http\Controllers\Clients\AuthController;
 use App\Http\Controllers\Clients\ForgotPasswordController;
 use App\Http\Controllers\Clients\ResetPasswordController;
@@ -55,7 +56,16 @@ Route::get('/activate/{token}', [AuthController::class, 'activate'])->name('acti
 Route::middleware(['auth.custom'])->group(function() {
     //Đăng xuất tài khoản
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    //Xây dựng trang account cho người dùng
+    Route::prefix('account')->group(function(){
+        Route::get('/', [AccountController::class, 'index'])->name('account');  
+        Route::put('/update', [AccountController::class, 'update'])->name('account.update');
+
+        Route::post('/change-password', [AccountController::class, 'changePassword'])->name('account.change-password');
+    });
+    
 });
+
 
 
 //Giao diện phía Admin
